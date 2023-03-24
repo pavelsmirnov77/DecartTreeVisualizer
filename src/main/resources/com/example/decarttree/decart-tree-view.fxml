@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="718.0" prefWidth="1411.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.decarttree.Controller">
+   <children>
+      <BorderPane layoutX="33.0" layoutY="49.0" prefHeight="619.0" prefWidth="646.0" style="-fx-border-color: black; -fx-border-radius: 2px;">
+         <center>
+            <Canvas fx:id="canvas" height="609.0" width="1169.0" BorderPane.alignment="CENTER" />
+         </center>
+      </BorderPane>
+      <Button fx:id="buttonStart" layoutX="1263.0" layoutY="640.0" mnemonicParsing="false" onAction="#btnStartClicked" text="построить" />
+   </children>
+</AnchorPane>
