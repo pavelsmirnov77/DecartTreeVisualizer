@@ -4,10 +4,14 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.control.ScrollPane;
 
 public class Controller {
     @FXML
     Canvas canvas = new Canvas();
+    @FXML
+    ScrollPane scrollPane = new ScrollPane();
+
 
     public void btnStartClicked(ActionEvent actionEvent) {
         DecartTree tree = new DecartTree();
@@ -16,8 +20,11 @@ public class Controller {
         }
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
+        scrollPane.setContent(canvas);
+        scrollPane.setMinWidth(1169);
+        scrollPane.setMinHeight(609);
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawTree(gc, tree.getRoot(), canvas.getWidth()/2, 25, 25, 15, 120, 0);
+        drawTree(gc, tree.getRoot(), canvas.getWidth()/2, 40, 25, 15, 120, 0);
     }
 
     private void drawTree(GraphicsContext gc, Node node, double x, double y, double radius, double angle, double spacing, int depth) {
@@ -28,8 +35,8 @@ public class Controller {
             gc.fillOval(x - radius, y - radius, 2 * radius, 2 * radius);
             gc.strokeOval(x - radius, y - radius, 2 * radius, 2 * radius);
             gc.setFill(Color.BLACK);
-            gc.fillText(Integer.toString(node.getKey()), x - 5, y + 5);
-            gc.fillText(Integer.toString(node.getValue()), x, y + 15);
+            gc.fillText(Integer.toString(node.getKey()), x - 14, y + 5);
+            gc.fillText(Integer.toString(node.getValue()), x + 4, y + 5);
 
             // увеличение расстояния между узлами и угла линии в зависимости от глубины дерева
             double pow = Math.pow(2, -Math.floor(depth / 4) - 1);
