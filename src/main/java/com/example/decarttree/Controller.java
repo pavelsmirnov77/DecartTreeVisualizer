@@ -17,7 +17,7 @@ public class Controller {
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawTree(gc, tree.getRoot(), canvas.getWidth()/2, 25, 25, 20, 100, 0);
+        drawTree(gc, tree.getRoot(), canvas.getWidth()/2, 25, 25, 15, 120, 0);
     }
 
     private void drawTree(GraphicsContext gc, Node node, double x, double y, double radius, double angle, double spacing, int depth) {
@@ -30,20 +30,27 @@ public class Controller {
             gc.setFill(Color.BLACK);
             gc.fillText(Integer.toString(node.getKey()), x - 5, y + 5);
             gc.fillText(Integer.toString(node.getValue()), x, y + 15);
-            double childSpacing = spacing * Math.pow(2, -Math.floor(depth/4) - 1);
+
+            // увеличение расстояния между узлами и угла линии в зависимости от глубины дерева
+            double pow = Math.pow(2, -Math.floor(depth / 4) - 1);
+            double childSpacing = 20 + spacing * pow;
+            double childAngle = angle * pow;
+
             if (node.getLeft() != null) {
-                double childAngle = -90;
                 double childX = x - childSpacing;
-                double childY = y + spacing + radius;
+                double childY = y + spacing + radius + (depth * 10);
                 gc.strokeLine(x, y + radius, childX, childY - radius);
-                drawTree(gc, node.getLeft(), childX, childY, radius, childAngle, spacing, depth+1);
+
+                // рекурсивный вызов с новым значением угла и глубины
+                drawTree(gc, node.getLeft(), childX, childY, radius, childAngle, childSpacing, depth + 1);
             }
             if (node.getRight() != null) {
-                double childAngle = -90;
                 double childX = x + childSpacing;
-                double childY = y + spacing + radius;
+                double childY = y + spacing + radius + (depth * 10);
                 gc.strokeLine(x, y + radius, childX, childY - radius);
-                drawTree(gc, node.getRight(), childX, childY, radius, childAngle, spacing, depth+1);
+
+                // рекурсивный вызов с новым значением угла и глубины
+                drawTree(gc, node.getRight(), childX, childY, radius, childAngle, childSpacing, depth + 1);
             }
         }
     }
