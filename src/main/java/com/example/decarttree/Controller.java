@@ -4,11 +4,15 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.control.ScrollPane;
 
 public class Controller {
+    static DecartTree tree = new DecartTree();
     public Label textMessage;
+    public TextField keyTextField;
+    public TextField valueTextField;
     @FXML
     Canvas canvas = new Canvas();
     @FXML
@@ -64,13 +68,58 @@ public class Controller {
         }
         textMessage.setText("Декартово дерево построено");
     }
-
     public void btnInsert(ActionEvent actionEvent) {
+        String keyText = keyTextField.getText();
+        String valText = valueTextField.getText();
+        if (keyText.isEmpty() || valText.isEmpty()) {
+            textMessage.setText("Поля ключа и значения не могут быть пустыми");
+            return;
+        }
+        int key = Integer.parseInt(keyText);
+        int value = Integer.parseInt(valText);
+        tree.insert(key, value);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        scrollPane.setContent(canvas);
+        scrollPane.setMinWidth(1169);
+        scrollPane.setMinHeight(609);
+        drawTree(gc, tree.getRoot(), canvas.getWidth()/2, 40, 25, 15, 120, 0);
+        textMessage.setText(String.format("Значение с ключом %d и значением %d вставлено успешно", key, value));
     }
 
     public void findBtn(ActionEvent actionEvent) {
+        String keyText = keyTextField.getText();
+        if (keyText.isEmpty()) {
+            textMessage.setText("Поле ключа не может быть пустым");
+            return;
+        }
+        int key = Integer.parseInt(keyText);
+        Node found = tree.find(key);
+        if (found == null) {
+            textMessage.setText(String.format("Элемент с ключом %d не найден", key));
+        } else {
+            textMessage.setText(String.format("Найден элемент с ключом %d и значением %d", found.getKey(), found.getValue()));
+        }
     }
 
-    public void btnDelete(ActionEvent actionEvent) {
+        public void btnDelete(ActionEvent actionEvent) {
+            String keyText = keyTextField.getText();
+            if (keyText.isEmpty()) {
+                textMessage.setText("Поле ключа не может быть пустым");
+                return;
+            }
+            int key = Integer.parseInt(keyText);
+            Node found = tree.find(key);
+            if (found == null) {
+                textMessage.setText(String.format("Элемент с ключом %d для удаления не найден", key));
+            } else {
+                tree.delete(key);
+                textMessage.setText("Элемент удален");
+            }
+    }
+
+    public void btnDeleteAll(ActionEvent actionEvent) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        textMessage.setText("Все элементы дерева удалены");
     }
 }

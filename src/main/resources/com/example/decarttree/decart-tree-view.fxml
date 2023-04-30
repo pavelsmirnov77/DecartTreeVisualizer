@@ -14,9 +14,9 @@
    <children>
       <BorderPane layoutX="33.0" layoutY="49.0" prefHeight="619.0" prefWidth="646.0" style="-fx-border-color: black; -fx-border-radius: 2px;">
          <center>
-            <ScrollPane fx:id="scrollPane" minHeight="609.0" minWidth="1169.0" prefHeight="2000.0" prefWidth="3000.0">
+            <ScrollPane fx:id="scrollPane" minHeight="609.0" minWidth="1169.0" prefHeight="2000.0" prefWidth="2000.0">
                <content>
-                  <Canvas fx:id="canvas" height="2000.0" width="3000.0" BorderPane.alignment="CENTER" />
+                  <Canvas fx:id="canvas" height="2000.0" width="2000.0" BorderPane.alignment="CENTER" />
                </content>
             </ScrollPane>
          </center>
@@ -40,12 +40,13 @@
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <TextField fx:id="insertKeyTextField" layoutX="1317.0" layoutY="118.0" />
-      <TextField fx:id="insertValueTextField" layoutX="1317.0" layoutY="168.0" />
+      <TextField fx:id="keyTextField" layoutX="1317.0" layoutY="118.0" />
+      <TextField fx:id="valueTextField" layoutX="1317.0" layoutY="168.0" />
       <Label layoutX="1258.0" layoutY="120.0" text="Ключ" />
       <Label layoutX="1258.0" layoutY="170.0" text="Значение" />
       <Button fx:id="insertElementButton" layoutX="1317.0" layoutY="212.0" mnemonicParsing="false" onAction="#btnInsert" text="Вставить элемент" />
       <Button fx:id="findElementButton" layoutX="1324.0" layoutY="296.0" mnemonicParsing="false" onAction="#findBtn" text="Найти элемент" />
       <Button fx:id="deleteElementButton" layoutX="1319.0" layoutY="254.0" mnemonicParsing="false" onAction="#btnDelete" text="Удалить элемент" />
+      <Button fx:id="buttonDeleteAll" layoutX="1298.0" layoutY="692.0" mnemonicParsing="false" onAction="#btnDeleteAll" text="Удалить все элементы" />
    </children>
 </AnchorPane>
