@@ -3,10 +3,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.control.ScrollPane;
 
 public class Controller {
+    public Label textMessage;
     @FXML
     Canvas canvas = new Canvas();
     @FXML
@@ -44,21 +46,31 @@ public class Controller {
             double childAngle = angle * pow;
 
             if (node.getLeft() != null) {
-                double childX = x - childSpacing;
-                double childY = y + spacing + radius + (depth * 10);
+                double childX = x - childSpacing - (400 * 1/(depth+1));
+                double childY = 10 + y + spacing + radius - 100/(depth + 1);
                 gc.strokeLine(x, y + radius, childX, childY - radius);
 
                 // рекурсивный вызов с новым значением угла и глубины
                 drawTree(gc, node.getLeft(), childX, childY, radius, childAngle, childSpacing, depth + 1);
             }
             if (node.getRight() != null) {
-                double childX = x + childSpacing;
-                double childY = y + spacing + radius + (depth * 10);
+                double childX = x + childSpacing + 400 * 1/(depth+1);
+                double childY = 10 + y + spacing + radius - 100/(depth + 1);
                 gc.strokeLine(x, y + radius, childX, childY - radius);
 
                 // рекурсивный вызов с новым значением угла и глубины
                 drawTree(gc, node.getRight(), childX, childY, radius, childAngle, childSpacing, depth + 1);
             }
         }
+        textMessage.setText("Декартово дерево построено");
+    }
+
+    public void btnInsert(ActionEvent actionEvent) {
+    }
+
+    public void findBtn(ActionEvent actionEvent) {
+    }
+
+    public void btnDelete(ActionEvent actionEvent) {
     }
 }
