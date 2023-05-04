@@ -60,14 +60,14 @@ public class DecartTree {
         return current;
     }
 
-    public void delete(int key) {
-        root = delete(root, key);
+    public void delete(int key, int value) {
+        root = delete(root, key, value);
     }
-    private Node delete(Node node, int key) {
+    private Node delete(Node node, int key, int value) {
         if (node == null) {
             return null;
         }
-        if (node.getKey() == key) {
+        if (node.getKey() == key && node.getValue() == value) {
             if (node.getLeft() == null && node.getRight() == null) {
                 return null;
             }
@@ -81,17 +81,18 @@ public class DecartTree {
                 Node temp = findMin(node.getRight());
                 node.setKey(temp.getKey());
                 node.setValue(temp.getValue());
-                node.setRight(delete(node.getRight(), temp.getKey()));
+                node.setRight(delete(node.getRight(), temp.getKey(), temp.getValue()));
             }
         }
         else if (node.getKey() > key) {
-            node.setLeft(delete(node.getLeft(), key));
+            node.setLeft(delete(node.getLeft(), key, value));
         }
         else {
-            node.setRight(delete(node.getRight(), key));
+            node.setRight(delete(node.getRight(), key, value));
         }
         return node;
     }
+
 
     private Node findMin(Node node) {
         while (node.getLeft() != null) {

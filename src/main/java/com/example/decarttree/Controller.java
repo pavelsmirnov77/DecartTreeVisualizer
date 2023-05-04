@@ -45,18 +45,24 @@ public class Controller {
 
     public void btnStartClicked(ActionEvent actionEvent) {
         DecartTree tree = new DecartTree();
-        for (int i = 0; i < (int)counterElements.getValue(); i++) {
-            tree.insert((int) (Math.random() * 10 + 10), (int) (Math.random() * 10 + 10));
+        if ((int)counterElements.getValue() == 0) {
+            textMessage.setText("Количество элементов для построения должно быть больше 0!");
         }
+        else {
+            for (int i = 0; i < (int) counterElements.getValue(); i++) {
+                tree.insert((int) (Math.random() * 10 + 10), (int) (Math.random() * 10 + 10));
+            }
 
-        countInsert += (int)counterElements.getValue();
+            countInsert += (int) counterElements.getValue();
 
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        scrollPane.setContent(canvas);
-        scrollPane.setMinWidth(1169);
-        scrollPane.setMinHeight(609);
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawTree(gc, tree.getRoot(), canvas.getWidth()/2, 40, 25, 15, 120, 0);
+            GraphicsContext gc = canvas.getGraphicsContext2D();
+            scrollPane.setContent(canvas);
+            scrollPane.setMinWidth(1169);
+            scrollPane.setMinHeight(609);
+            gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawTree(gc, tree.getRoot(), canvas.getWidth() / 2, 40, 25, 15, 120, 0);
+            textMessage.setText(String.format("Построено дерево, состоящее из %d элемента(ов).", (int)counterElements.getValue()));
+        }
     }
 
     private void drawTree(GraphicsContext gc, Node node, double x, double y, double radius, double angle, double spacing, int depth) {
@@ -92,7 +98,7 @@ public class Controller {
                 drawTree(gc, node.getRight(), childX, childY, radius, childAngle, childSpacing, depth + 1);
             }
         }
-        textMessage.setText("Декартово дерево построено");
+        textMessage.setText("Декартово дерево построено.");
     }
     public void btnInsert(ActionEvent actionEvent) {
         if (countInsert >= 15 ){
@@ -102,64 +108,76 @@ public class Controller {
             String keyText = keyTextField.getText();
             String valText = valueTextField.getText();
             if (keyText.isEmpty() || valText.isEmpty()) {
-                textMessage.setText("Поля ключа и значения не могут быть пустыми");
-                return;
+                textMessage.setText("Поля ключа или значения не могут быть пустыми!");
             }
-            int key = Integer.parseInt(keyText);
-            int value = Integer.parseInt(valText);
-            tree.insert(key, value);
-            GraphicsContext gc = canvas.getGraphicsContext2D();
-            scrollPane.setContent(canvas);
-            scrollPane.setMinWidth(1169);
-            scrollPane.setMinHeight(609);
-            drawTree(gc, tree.getRoot(), canvas.getWidth() / 2, 40, 25, 15, 120, 0);
-            textMessage.setText(String.format("Значение с ключом %d и значением %d вставлено успешно", key, value));
-            countInsert++;
+            else {
+                int key = Integer.parseInt(keyText);
+                int value = Integer.parseInt(valText);
+                tree.insert(key, value);
+                GraphicsContext gc = canvas.getGraphicsContext2D();
+                scrollPane.setContent(canvas);
+                scrollPane.setMinWidth(1169);
+                scrollPane.setMinHeight(609);
+                drawTree(gc, tree.getRoot(), canvas.getWidth() / 2, 40, 25, 15, 120, 0);
+                textMessage.setText(String.format("Значение с ключом %d и значением %d вставлено успешно.", key, value));
+                countInsert++;
+            }
         }
     }
 
     public void findBtn(ActionEvent actionEvent) {
         String keyText = keyTextField.getText();
         String valueText = valueTextField.getText();
-        if (keyText.isEmpty()) {
-            textMessage.setText("Поле ключа не может быть пустым");
-            return;
+        if (keyText.isEmpty() || valueText.isEmpty()) {
+            textMessage.setText("Поле ключа или значения не может быть пустым!");
         }
-        int key = Integer.parseInt(keyText);
-        int value = Integer.parseInt(valueText);
-        Node found = tree.find(key, value);
-        if (found == null) {
-            textMessage.setText(String.format("Элемент с ключом %d и значением %d не найден", key, value));
-        } else {
-            textMessage.setText(String.format("Найден элемент с ключом %d и значением %d", found.getKey(), found.getValue()));
-        }
-    }
-
-        public void btnDelete(ActionEvent actionEvent) {
-            String keyText = keyTextField.getText();
-            String valueText = valueTextField.getText();
-
-            if (keyText.isEmpty()) {
-                textMessage.setText("Поле ключа не может быть пустым");
-                return;
-            }
+        else {
             int key = Integer.parseInt(keyText);
             int value = Integer.parseInt(valueText);
             Node found = tree.find(key, value);
             if (found == null) {
-                textMessage.setText(String.format("Элемент с ключом %d для удаления не найден", key));
+                textMessage.setText(String.format("Элемент с ключом %d и значением %d не найден.", key, value));
             } else {
-                tree.delete(key);
-                textMessage.setText("Элемент удален");
-                countInsert--;
+                textMessage.setText(String.format("Найден элемент с ключом %d и значением %d.", found.getKey(), found.getValue()));
             }
+        }
+    }
+
+    public void btnDelete(ActionEvent actionEvent) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        String keyText = keyTextField.getText();
+        String valueText = valueTextField.getText();
+
+        if (keyText.isEmpty() || valueText.isEmpty()) {
+            textMessage.setText("Поле ключа или значения не может быть пустым!");
+        }
+        else {
+            int key = Integer.parseInt(keyText);
+            int value = Integer.parseInt(valueText);
+            Node found = tree.find(key, value);
+            if (found == null) {
+                textMessage.setText(String.format("Элемент с ключом %d и значением %d для удаления не найден!", key, value));
+            }
+            else {
+                tree.delete(key, value);
+                countInsert--;
+                gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                drawTree(gc, tree.getRoot(), canvas.getWidth()/2, 40, 25, 15, 120, 0);
+                textMessage.setText(String.format("Элемент с ключом %d и значением %d удален.", key, value));
+            }
+        }
     }
 
     public void btnDeleteAll(ActionEvent actionEvent) {
-        tree.deleteAll();
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        textMessage.setText("Все элементы дерева удалены");
-        countInsert = 0;
+        if (countInsert == 0) {
+            textMessage.setText("Элементы дерева отсутствуют!");
+        }
+        else {
+            tree.deleteAll();
+            GraphicsContext gc = canvas.getGraphicsContext2D();
+            gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            textMessage.setText("Все элементы дерева удалены.");
+            countInsert = 0;
+        }
     }
 }
