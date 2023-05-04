@@ -15,9 +15,9 @@
    <children>
       <BorderPane layoutX="33.0" layoutY="49.0" prefHeight="619.0" prefWidth="646.0" style="-fx-border-color: black; -fx-border-radius: 2px;">
          <center>
-            <ScrollPane fx:id="scrollPane" minHeight="609.0" minWidth="1169.0" prefHeight="2700.0" prefWidth="2700.0">
+            <ScrollPane fx:id="scrollPane" minHeight="609.0" minWidth="1169.0" prefHeight="2000.0" prefWidth="2000.0">
                <content>
-                  <Canvas fx:id="canvas" height="2700.0" width="2700.0" BorderPane.alignment="CENTER" />
+                  <Canvas fx:id="canvas" height="2000.0" width="2000.0" BorderPane.alignment="CENTER" />
                </content>
             </ScrollPane>
          </center>
@@ -49,7 +49,7 @@
       <Button fx:id="findElementButton" layoutX="1324.0" layoutY="296.0" mnemonicParsing="false" onAction="#findBtn" text="Найти элемент" />
       <Button fx:id="deleteElementButton" layoutX="1319.0" layoutY="254.0" mnemonicParsing="false" onAction="#btnDelete" text="Удалить элемент" />
       <Button fx:id="buttonDeleteAll" layoutX="1306.0" layoutY="458.0" mnemonicParsing="false" onAction="#btnDeleteAll" text="Удалить все элементы" />
-      <Spinner fx:id="counterElements" min="0" max="15" layoutX="1408.0" layoutY="371.0" prefHeight="26.0" prefWidth="53.0" />
+      <Spinner fx:id="counterElements" editable="true" layoutX="1408.0" layoutY="371.0" max="15" min="0" prefHeight="26.0" prefWidth="53.0" />
       <Label layoutX="1276.0" layoutY="374.0" text="Количество элементов" />
    </children>
 </AnchorPane>
