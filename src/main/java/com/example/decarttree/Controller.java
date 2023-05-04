@@ -20,8 +20,28 @@ public class Controller {
     @FXML
     Canvas canvas = new Canvas();
     @FXML
-    ScrollPane scrollPane = new ScrollPane();
+    ScrollPane scrollPane = new ScrollPane(canvas);
+    private double scale = 1.0;
 
+    public void initialize() {
+        scrollPane.setContent(canvas);
+
+        canvas.setOnScroll(event -> {
+            event.consume();
+
+            if (event.isControlDown()) {
+                double delta = event.getDeltaY();
+                if (delta < 0) {
+                    scale -= 0.1;
+                } else {
+                    scale += 0.1;
+                }
+                scale = Math.min(Math.max(0.1, scale), 10.0);
+                canvas.setScaleX(scale);
+                canvas.setScaleY(scale);
+            }
+        });
+    }
 
     public void btnStartClicked(ActionEvent actionEvent) {
         DecartTree tree = new DecartTree();

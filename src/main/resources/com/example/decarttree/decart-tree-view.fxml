@@ -15,9 +15,9 @@
    <children>
       <BorderPane layoutX="33.0" layoutY="49.0" prefHeight="619.0" prefWidth="646.0" style="-fx-border-color: black; -fx-border-radius: 2px;">
          <center>
-            <ScrollPane fx:id="scrollPane" minHeight="609.0" minWidth="1169.0" prefHeight="2000.0" prefWidth="2000.0">
+            <ScrollPane fx:id="scrollPane" minHeight="609.0" minWidth="1169.0" prefHeight="2700.0" prefWidth="2700.0">
                <content>
-                  <Canvas fx:id="canvas" height="2000.0" width="2000.0" BorderPane.alignment="CENTER" />
+                  <Canvas fx:id="canvas" height="2700.0" width="2700.0" BorderPane.alignment="CENTER" />
                </content>
             </ScrollPane>
          </center>
