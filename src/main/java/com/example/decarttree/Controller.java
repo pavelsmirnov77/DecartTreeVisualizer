@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.control.ScrollPane;
@@ -13,6 +14,9 @@ public class Controller {
     public Label textMessage;
     public TextField keyTextField;
     public TextField valueTextField;
+    public Spinner counterElements;
+
+    int countInsert = 0;
     @FXML
     Canvas canvas = new Canvas();
     @FXML
@@ -21,9 +25,11 @@ public class Controller {
 
     public void btnStartClicked(ActionEvent actionEvent) {
         DecartTree tree = new DecartTree();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < (int)counterElements.getValue(); i++) {
             tree.insert((int) (Math.random() * 10 + 10), (int) (Math.random() * 10 + 10));
         }
+
+        countInsert += (int)counterElements.getValue();
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
         scrollPane.setContent(canvas);
@@ -69,21 +75,27 @@ public class Controller {
         textMessage.setText("Декартово дерево построено");
     }
     public void btnInsert(ActionEvent actionEvent) {
-        String keyText = keyTextField.getText();
-        String valText = valueTextField.getText();
-        if (keyText.isEmpty() || valText.isEmpty()) {
-            textMessage.setText("Поля ключа и значения не могут быть пустыми");
-            return;
+        if (countInsert >= 15 ){
+            textMessage.setText("Вставлено максимальное количество элементов!");
         }
-        int key = Integer.parseInt(keyText);
-        int value = Integer.parseInt(valText);
-        tree.insert(key, value);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        scrollPane.setContent(canvas);
-        scrollPane.setMinWidth(1169);
-        scrollPane.setMinHeight(609);
-        drawTree(gc, tree.getRoot(), canvas.getWidth()/2, 40, 25, 15, 120, 0);
-        textMessage.setText(String.format("Значение с ключом %d и значением %d вставлено успешно", key, value));
+        else {
+            String keyText = keyTextField.getText();
+            String valText = valueTextField.getText();
+            if (keyText.isEmpty() || valText.isEmpty()) {
+                textMessage.setText("Поля ключа и значения не могут быть пустыми");
+                return;
+            }
+            int key = Integer.parseInt(keyText);
+            int value = Integer.parseInt(valText);
+            tree.insert(key, value);
+            GraphicsContext gc = canvas.getGraphicsContext2D();
+            scrollPane.setContent(canvas);
+            scrollPane.setMinWidth(1169);
+            scrollPane.setMinHeight(609);
+            drawTree(gc, tree.getRoot(), canvas.getWidth() / 2, 40, 25, 15, 120, 0);
+            textMessage.setText(String.format("Значение с ключом %d и значением %d вставлено успешно", key, value));
+            countInsert++;
+        }
     }
 
     public void findBtn(ActionEvent actionEvent) {
@@ -102,6 +114,7 @@ public class Controller {
     }
 
         public void btnDelete(ActionEvent actionEvent) {
+
             String keyText = keyTextField.getText();
             if (keyText.isEmpty()) {
                 textMessage.setText("Поле ключа не может быть пустым");
@@ -114,6 +127,7 @@ public class Controller {
             } else {
                 tree.delete(key);
                 textMessage.setText("Элемент удален");
+                countInsert--;
             }
     }
 
