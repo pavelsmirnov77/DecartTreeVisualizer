@@ -45,9 +45,9 @@ public class DecartTree {
         right.setLeft(node);
         return right;
     }
-    public Node find(int key) {
+    public Node find(int key, int value) {
         Node current = root;
-        while (current != null && current.getKey() != key) {
+        while (current != null && (current.getKey() != key || current.getValue() != value)) {
             if (key < current.getKey()) {
                 current = current.getLeft();
             } else {
@@ -102,5 +102,9 @@ public class DecartTree {
 
     public Node getRoot() {
         return root;
+    }
+
+    public void deleteAll() {
+        root = null;
     }
 }

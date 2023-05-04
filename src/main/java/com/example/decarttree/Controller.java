@@ -100,28 +100,32 @@ public class Controller {
 
     public void findBtn(ActionEvent actionEvent) {
         String keyText = keyTextField.getText();
+        String valueText = valueTextField.getText();
         if (keyText.isEmpty()) {
             textMessage.setText("Поле ключа не может быть пустым");
             return;
         }
         int key = Integer.parseInt(keyText);
-        Node found = tree.find(key);
+        int value = Integer.parseInt(valueText);
+        Node found = tree.find(key, value);
         if (found == null) {
-            textMessage.setText(String.format("Элемент с ключом %d не найден", key));
+            textMessage.setText(String.format("Элемент с ключом %d и значением %d не найден", key, value));
         } else {
             textMessage.setText(String.format("Найден элемент с ключом %d и значением %d", found.getKey(), found.getValue()));
         }
     }
 
         public void btnDelete(ActionEvent actionEvent) {
-
             String keyText = keyTextField.getText();
+            String valueText = valueTextField.getText();
+
             if (keyText.isEmpty()) {
                 textMessage.setText("Поле ключа не может быть пустым");
                 return;
             }
             int key = Integer.parseInt(keyText);
-            Node found = tree.find(key);
+            int value = Integer.parseInt(valueText);
+            Node found = tree.find(key, value);
             if (found == null) {
                 textMessage.setText(String.format("Элемент с ключом %d для удаления не найден", key));
             } else {
@@ -132,8 +136,10 @@ public class Controller {
     }
 
     public void btnDeleteAll(ActionEvent actionEvent) {
+        tree.deleteAll();
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         textMessage.setText("Все элементы дерева удалены");
+        countInsert = 0;
     }
 }
