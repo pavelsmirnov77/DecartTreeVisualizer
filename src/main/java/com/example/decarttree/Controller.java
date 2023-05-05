@@ -44,16 +44,15 @@ public class Controller {
     }
 
     public void btnStartClicked(ActionEvent actionEvent) {
-        DecartTree tree = new DecartTree();
+        tree = new DecartTree(); // удалить локальную переменную
         if ((int)counterElements.getValue() == 0) {
             textMessage.setText("Количество элементов для построения должно быть больше 0!");
-        }
-        else {
-            for (int i = 0; i < (int) counterElements.getValue(); i++) {
-                tree.insert((int) (Math.random() * 10 + 10), (int) (Math.random() * 10 + 10));
+        } else {
+            for (int i = 0; i < (int)counterElements.getValue(); i++) {
+                tree.insert((int)(Math.random() * 10 + 10), (int)(Math.random() * 10 + 10));
             }
 
-            countInsert += (int) counterElements.getValue();
+            countInsert += (int)counterElements.getValue();
 
             GraphicsContext gc = canvas.getGraphicsContext2D();
             scrollPane.setContent(canvas);
@@ -64,6 +63,7 @@ public class Controller {
             textMessage.setText(String.format("Построено дерево, состоящее из %d элемента(ов).", (int)counterElements.getValue()));
         }
     }
+
 
     private void drawTree(GraphicsContext gc, Node node, double x, double y, double radius, double angle, double spacing, int depth) {
         if (node != null) {
