@@ -1,14 +1,20 @@
 package com.example.decarttree;
-
+import java.util.ArrayList;
+import java.util.List;
 public class DecartTree {
 
     private Node root;
+    private final List<Action> actions; // список действий
+    private final List<Action> undoneActions; //список отмененных действий
 
     public DecartTree() {
         root = null;
+        actions = new ArrayList<>();
+        undoneActions = new ArrayList<>();
     }
 
     public void insert(int key, int value) {
+        addAction(new Action(ActionType.INSERT, key, value)); //добавляем новое действие - добавление элемента в дерево
         root = insert(root, key, value);
     }
 
@@ -32,6 +38,43 @@ public class DecartTree {
         return node;
     }
 
+    public void delete(int key, int value) {
+        addAction(new Action(ActionType.DELETE, key, value)); //добавляем новое действие - удаление элемента из дерева
+        root = delete(root, key, value);
+    }
+
+    private Node delete(Node node, int key, int value) {
+        if (node == null) {
+            return null;
+        }
+        if (node.getKey() == key && node.getValue() == value) {
+            if (node.getLeft() == null && node.getRight() == null) {
+                return null;
+            } else if (node.getLeft() == null) {
+                return node.getRight();
+            } else if (node.getRight() == null) {
+                return node.getLeft();
+            } else {
+                Node temp = findMin(node.getRight());
+                node.setKey(temp.getKey());
+                node.setValue(temp.getValue());
+                node.setRight(delete(node.getRight(), temp.getKey(), temp.getValue()));
+            }
+        } else if (node.getKey() > key) {
+            node.setLeft(delete(node.getLeft(), key, value));
+        } else {
+            node.setRight(delete(node.getRight(), key, value));
+        }
+        return node;
+    }
+
+    private Node findMin(Node node) {
+        while (node.getLeft() != null) {
+            node = node.getLeft();
+        }
+        return node;
+    }
+
     private Node rotateRight(Node node) {
         Node left = node.getLeft();
         node.setLeft(left.getRight());
@@ -45,6 +88,7 @@ public class DecartTree {
         right.setLeft(node);
         return right;
     }
+
     public Node find(int key, int value) {
         Node current = root;
         while (current != null && (current.getKey() != key || current.getValue() != value)) {
@@ -54,58 +98,44 @@ public class DecartTree {
                 current = current.getRight();
             }
         }
-        if (current == null) {
-            return null;
-        }
         return current;
     }
 
-    public void delete(int key, int value) {
-        root = delete(root, key, value);
-    }
-    private Node delete(Node node, int key, int value) {
-        if (node == null) {
-            return null;
-        }
-        if (node.getKey() == key && node.getValue() == value) {
-            if (node.getLeft() == null && node.getRight() == null) {
-                return null;
-            }
-            else if (node.getLeft() == null) {
-                return node.getRight();
-            }
-            else if (node.getRight() == null) {
-                return node.getLeft();
-            }
-            else {
-                Node temp = findMin(node.getRight());
-                node.setKey(temp.getKey());
-                node.setValue(temp.getValue());
-                node.setRight(delete(node.getRight(), temp.getKey(), temp.getValue()));
-            }
-        }
-        else if (node.getKey() > key) {
-            node.setLeft(delete(node.getLeft(), key, value));
-        }
-        else {
-            node.setRight(delete(node.getRight(), key, value));
-        }
-        return node;
-    }
-
-
-    private Node findMin(Node node) {
-        while (node.getLeft() != null) {
-            node = node.getLeft();
-        }
-        return node;
+    public void deleteAll() {
+        addAction(new Action(ActionType.DELETE_ALL)); //добавляем новое действие - удаление всех элементов из дерева
+        root = null;
     }
 
     public Node getRoot() {
         return root;
     }
 
-    public void deleteAll() {
-        root = null;
+    private void addAction(Action action) {
+        actions.add(action);
+    }
+
+    public void undo() {
+        if (!actions.isEmpty()) {
+            Action lastAction = actions.remove(actions.size() - 1);
+            switch (lastAction.getActionType()) {
+                case INSERT -> root = delete(root, lastAction.getKey(), lastAction.getValue());
+                case DELETE -> root = insert(root, lastAction.getKey(), lastAction.getValue());
+                case DELETE_ALL -> actions.clear();
+            }
+            undoneActions.add(lastAction); // добавляем отмененное действие в список отмененных действий
+        }
+    }
+
+    public void redo() {
+        if (!undoneActions.isEmpty()) {
+            Action lastUndoneAction = undoneActions.remove(undoneActions.size() - 1);
+            switch (lastUndoneAction.getActionType()) {
+                case INSERT -> root = insert(root, lastUndoneAction.getKey(), lastUndoneAction.getValue());
+                case DELETE -> root = delete(root, lastUndoneAction.getKey(), lastUndoneAction.getValue());
+                case DELETE_ALL -> actions.clear();
+            }
+            actions.add(lastUndoneAction); // добавляем повторенное действие обратно в список действий
+        }
     }
 }
+

@@ -44,7 +44,7 @@ public class Controller {
     }
 
     public void btnStartClicked(ActionEvent actionEvent) {
-        tree = new DecartTree(); // удалить локальную переменную
+        tree = new DecartTree();
         if ((int)counterElements.getValue() == 0) {
             textMessage.setText("Количество элементов для построения должно быть больше 0!");
         } else {
@@ -63,7 +63,6 @@ public class Controller {
             textMessage.setText(String.format("Построено дерево, состоящее из %d элемента(ов).", (int)counterElements.getValue()));
         }
     }
-
 
     private void drawTree(GraphicsContext gc, Node node, double x, double y, double radius, double angle, double spacing, int depth) {
         if (node != null) {
@@ -179,5 +178,21 @@ public class Controller {
             textMessage.setText("Все элементы дерева удалены.");
             countInsert = 0;
         }
+    }
+
+    public void btnBackStepClicked(ActionEvent actionEvent) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        tree.undo();
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawTree(gc, tree.getRoot(), canvas.getWidth()/2, 40, 25, 15, 120, 0);
+        textMessage.setText("Выполнен шаг назад.");
+    }
+
+    public void btnNextStepClicked(ActionEvent actionEvent) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        tree.redo();
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawTree(gc, tree.getRoot(), canvas.getWidth()/2, 40, 25, 15, 120, 0);
+        textMessage.setText("Выполнен шаг вперед.");
     }
 }

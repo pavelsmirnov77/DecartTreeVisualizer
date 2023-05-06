@@ -22,7 +22,7 @@
             </ScrollPane>
          </center>
       </BorderPane>
-      <Button fx:id="buttonStart" layoutX="1284.0" layoutY="416.0" mnemonicParsing="false" onAction="#btnStartClicked" text="Построить случайное дерево" />
+      <Button fx:id="buttonStart" layoutX="1272.0" layoutY="416.0" mnemonicParsing="false" onAction="#btnStartClicked" text="Построить случайное дерево" />
       <Label layoutX="648.0" layoutY="14.0" text="Decart Tree Visualizer" AnchorPane.topAnchor="14.0">
          <font>
             <Font name="System Bold" size="21.0" />
@@ -48,8 +48,15 @@
       <Button fx:id="insertElementButton" layoutX="1317.0" layoutY="212.0" mnemonicParsing="false" onAction="#btnInsert" text="Вставить элемент" />
       <Button fx:id="findElementButton" layoutX="1324.0" layoutY="296.0" mnemonicParsing="false" onAction="#findBtn" text="Найти элемент" />
       <Button fx:id="deleteElementButton" layoutX="1319.0" layoutY="254.0" mnemonicParsing="false" onAction="#btnDelete" text="Удалить элемент" />
-      <Button fx:id="buttonDeleteAll" layoutX="1306.0" layoutY="458.0" mnemonicParsing="false" onAction="#btnDeleteAll" text="Удалить все элементы" />
-      <Spinner fx:id="counterElements" editable="true" layoutX="1408.0" layoutY="371.0" max="15" min="0" prefHeight="26.0" prefWidth="53.0" />
-      <Label layoutX="1276.0" layoutY="374.0" text="Количество элементов" />
+      <Button fx:id="buttonDeleteAll" layoutX="1294.0" layoutY="458.0" mnemonicParsing="false" onAction="#btnDeleteAll" text="Удалить все элементы" />
+      <Spinner fx:id="counterElements" editable="true" layoutX="1401.0" layoutY="371.0" max="15" min="0" prefHeight="26.0" prefWidth="53.0" />
+      <Label layoutX="1266.0" layoutY="374.0" text="Количество элементов" />
+      <Button fx:id="btnBackStep" layoutX="1287.0" layoutY="535.0" mnemonicParsing="false" onAction="#btnBackStepClicked" prefHeight="26.0" prefWidth="53.0" text="&lt;&lt;" />
+      <Button fx:id="btnNextStep" layoutX="1375.0" layoutY="535.0" mnemonicParsing="false" onAction="#btnNextStepClicked" prefHeight="26.0" prefWidth="54.0" text="&gt;&gt;" />
+      <Label layoutX="1301.0" layoutY="500.0" text="Выполнение шагов">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
