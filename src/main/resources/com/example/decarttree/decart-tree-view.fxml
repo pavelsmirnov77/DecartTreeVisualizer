@@ -42,9 +42,9 @@
          </font>
       </Label>
       <TextField fx:id="keyTextField" layoutX="1317.0" layoutY="118.0" />
-      <TextField fx:id="valueTextField" layoutX="1317.0" layoutY="168.0" />
-      <Label layoutX="1258.0" layoutY="120.0" text="Ключ" />
-      <Label layoutX="1258.0" layoutY="170.0" text="Значение" />
+      <TextField fx:id="priorityTextField" layoutX="1317.0" layoutY="168.0" />
+      <Label layoutX="1247.0" layoutY="120.0" text="Ключ" />
+      <Label layoutX="1247.0" layoutY="170.0" text="Приоритет" />
       <Button fx:id="insertElementButton" layoutX="1317.0" layoutY="212.0" mnemonicParsing="false" onAction="#btnInsert" text="Вставить элемент" />
       <Button fx:id="findElementButton" layoutX="1324.0" layoutY="296.0" mnemonicParsing="false" onAction="#findBtn" text="Найти элемент" />
       <Button fx:id="deleteElementButton" layoutX="1319.0" layoutY="254.0" mnemonicParsing="false" onAction="#btnDelete" text="Удалить элемент" />

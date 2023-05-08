@@ -2,15 +2,13 @@ package com.example.decarttree;
 
 public class Node {
     private int key;
-    private int value;
     private int priority;
     private Node left;
     private Node right;
 
-    public Node(int key, int value) {
+    public Node(int key, int priority) {
         this.key = key;
-        this.value = value;
-        this.priority = (int) (Math.random() * 100000);
+        this.priority = priority;
         this.left = null;
         this.right = null;
     }
@@ -21,14 +19,6 @@ public class Node {
 
     public void setKey(int key) {
         this.key = key;
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    public void setValue(int value) {
-        this.value = value;
     }
 
     public int getPriority() {
@@ -55,4 +45,3 @@ public class Node {
         this.right = right;
     }
 }
-

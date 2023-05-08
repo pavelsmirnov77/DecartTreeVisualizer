@@ -3,12 +3,12 @@ package com.example.decarttree;
 public class Action {
     private final ActionType actionType;
     private int key;
-    private int value;
+    private int priority;
 
-    public Action(ActionType actionType, int key, int value) {
+    public Action(ActionType actionType, int key, int priority) {
         this.actionType = actionType;
         this.key = key;
-        this.value = value;
+        this.priority = priority;
     }
 
     public Action(ActionType actionType) {
@@ -24,6 +24,6 @@ public class Action {
     }
 
     public int getValue() {
-        return value;
+        return priority;
     }
 }

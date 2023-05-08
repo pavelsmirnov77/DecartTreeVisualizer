@@ -13,7 +13,7 @@ public class Controller {
     static DecartTree tree = new DecartTree();
     public Label textMessage;
     public TextField keyTextField;
-    public TextField valueTextField;
+    public TextField priorityTextField;
     public Spinner counterElements;
 
     int countInsert = 0;
@@ -44,6 +44,7 @@ public class Controller {
     }
 
     public void btnStartClicked(ActionEvent actionEvent) {
+        countInsert = 0;
         tree = new DecartTree();
         if ((int)counterElements.getValue() == 0) {
             textMessage.setText("Количество элементов для построения должно быть больше 0!");
@@ -72,8 +73,8 @@ public class Controller {
             gc.fillOval(x - radius, y - radius, 2 * radius, 2 * radius);
             gc.strokeOval(x - radius, y - radius, 2 * radius, 2 * radius);
             gc.setFill(Color.BLACK);
-            gc.fillText(Integer.toString(node.getKey()), x - 14, y + 5);
-            gc.fillText(Integer.toString(node.getValue()), x + 4, y + 5);
+            gc.fillText("val: " + node.getKey(), x - 14, y - 2);
+            gc.fillText("\npr: " + node.getPriority(), x - 14, y + 2);
 
             // увеличение расстояния между узлами и угла линии в зависимости от глубины дерева
             double pow = Math.pow(2, -Math.floor(depth / 4) - 1);
@@ -105,20 +106,20 @@ public class Controller {
         }
         else {
             String keyText = keyTextField.getText();
-            String valText = valueTextField.getText();
-            if (keyText.isEmpty() || valText.isEmpty()) {
+            String priorityText = priorityTextField.getText();
+            if (keyText.isEmpty() || priorityText.isEmpty()) {
                 textMessage.setText("Поля ключа или значения не могут быть пустыми!");
             }
             else {
                 int key = Integer.parseInt(keyText);
-                int value = Integer.parseInt(valText);
-                tree.insert(key, value);
+                int priority = Integer.parseInt(priorityText);
+                tree.insert(key, priority);
                 GraphicsContext gc = canvas.getGraphicsContext2D();
                 scrollPane.setContent(canvas);
                 scrollPane.setMinWidth(1169);
                 scrollPane.setMinHeight(609);
                 drawTree(gc, tree.getRoot(), canvas.getWidth() / 2, 40, 25, 15, 120, 0);
-                textMessage.setText(String.format("Значение с ключом %d и значением %d вставлено успешно.", key, value));
+                textMessage.setText(String.format("Значение с ключом %d и значением %d вставлено успешно.", key, priority));
                 countInsert++;
             }
         }
@@ -126,18 +127,18 @@ public class Controller {
 
     public void findBtn(ActionEvent actionEvent) {
         String keyText = keyTextField.getText();
-        String valueText = valueTextField.getText();
-        if (keyText.isEmpty() || valueText.isEmpty()) {
+        String priorityText = priorityTextField.getText();
+        if (keyText.isEmpty() || priorityText.isEmpty()) {
             textMessage.setText("Поле ключа или значения не может быть пустым!");
         }
         else {
             int key = Integer.parseInt(keyText);
-            int value = Integer.parseInt(valueText);
-            Node found = tree.find(key, value);
+            int priority = Integer.parseInt(priorityText);
+            Node found = tree.find(key, priority);
             if (found == null) {
-                textMessage.setText(String.format("Элемент с ключом %d и значением %d не найден.", key, value));
+                textMessage.setText(String.format("Элемент с ключом %d и значением %d не найден.", key, priority));
             } else {
-                textMessage.setText(String.format("Найден элемент с ключом %d и значением %d.", found.getKey(), found.getValue()));
+                textMessage.setText(String.format("Найден элемент с ключом %d и значением %d.", found.getKey(), found.getPriority()));
             }
         }
     }
@@ -145,24 +146,24 @@ public class Controller {
     public void btnDelete(ActionEvent actionEvent) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         String keyText = keyTextField.getText();
-        String valueText = valueTextField.getText();
+        String priorityText = priorityTextField.getText();
 
-        if (keyText.isEmpty() || valueText.isEmpty()) {
+        if (keyText.isEmpty() || priorityText.isEmpty()) {
             textMessage.setText("Поле ключа или значения не может быть пустым!");
         }
         else {
             int key = Integer.parseInt(keyText);
-            int value = Integer.parseInt(valueText);
-            Node found = tree.find(key, value);
+            int priority = Integer.parseInt(priorityText);
+            Node found = tree.find(key, priority);
             if (found == null) {
-                textMessage.setText(String.format("Элемент с ключом %d и значением %d для удаления не найден!", key, value));
+                textMessage.setText(String.format("Элемент с ключом %d и значением %d для удаления не найден!", key, priority));
             }
             else {
-                tree.delete(key, value);
+                tree.delete(key, priority);
                 countInsert--;
                 gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
                 drawTree(gc, tree.getRoot(), canvas.getWidth()/2, 40, 25, 15, 120, 0);
-                textMessage.setText(String.format("Элемент с ключом %d и значением %d удален.", key, value));
+                textMessage.setText(String.format("Элемент с ключом %d и значением %d удален.", key, priority));
             }
         }
     }
