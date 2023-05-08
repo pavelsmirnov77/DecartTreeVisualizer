@@ -14,8 +14,9 @@ public class DecartTree {
     }
 
     public void insert(int key, int priority) {
-        addAction(new Action(ActionType.INSERT, key, priority)); //добавляем новое действие - добавление элемента в дерево
-        root = insert(root, key, priority);
+        addAction(new Action(ActionType.INSERT, key, priority));
+        NodePair pair = split(root, key);
+        root = merge(merge(pair.left, new Node(key, priority)), pair.right);
     }
 
     private Node insert(Node node, int key, int priority) {
@@ -39,8 +40,13 @@ public class DecartTree {
     }
 
     public void delete(int key, int priority) {
-        addAction(new Action(ActionType.DELETE, key, priority)); //добавляем новое действие - удаление элемента из дерева
-        root = delete(root, key, priority);
+        addAction(new Action(ActionType.DELETE, key, priority));
+        NodePair pair = split(root, key);
+        Node left = pair.left;
+        Node right = pair.right;
+        NodePair pair2 = split(right, key);
+        root = merge(left, pair2.right);
+        root = delete(root, key, priority); // удаление элемента с указанным ключом и приоритетом
     }
 
     private Node delete(Node node, int key, int priority) {
@@ -59,6 +65,7 @@ public class DecartTree {
                 node.setKey(temp.getKey());
                 node.setPriority(temp.getPriority());
                 node.setRight(delete(node.getRight(), temp.getKey(), temp.getPriority()));
+                return node;
             }
         } else if (node.getKey() > key) {
             node.setLeft(delete(node.getLeft(), key, priority));
@@ -135,6 +142,44 @@ public class DecartTree {
                 case DELETE_ALL -> actions.clear();
             }
             actions.add(lastUndoneAction); // добавляем повторенное действие обратно в список действий
+        }
+    }
+
+    private NodePair split(Node node, int key) {
+        if (node == null) {
+            return new NodePair(null, null);
+        }
+        if (node.getKey() <= key) {
+            NodePair pair = split(node.getRight(), key);
+            node.setRight(pair.left);
+            return new NodePair(node, pair.right);
+        } else {
+            NodePair pair = split(node.getLeft(), key);
+            node.setLeft(pair.right);
+            return new NodePair(pair.left, node);
+        }
+    }
+
+    private Node merge(Node left, Node right) {
+        if (left == null || right == null) {
+            return left == null ? right : left;
+        }
+        if (left.getPriority() < right.getPriority()) {
+            right.setLeft(merge(left, right.getLeft()));
+            return right;
+        } else {
+            left.setRight(merge(left.getRight(), right));
+            return left;
+        }
+    }
+
+    private class NodePair {
+        Node left;
+        Node right;
+
+        public NodePair(Node left, Node right) {
+            this.left = left;
+            this.right = right;
         }
     }
 }

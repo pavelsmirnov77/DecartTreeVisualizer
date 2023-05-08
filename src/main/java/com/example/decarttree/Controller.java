@@ -100,6 +100,7 @@ public class Controller {
         }
         textMessage.setText("Декартово дерево построено.");
     }
+
     public void btnInsert(ActionEvent actionEvent) {
         if (countInsert >= 15 ){
             textMessage.setText("Вставлено максимальное количество элементов!");
