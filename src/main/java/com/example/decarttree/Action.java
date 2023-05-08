@@ -23,7 +23,7 @@ public class Action {
         return key;
     }
 
-    public int getValue() {
+    public int getPriority() {
         return priority;
     }
 }

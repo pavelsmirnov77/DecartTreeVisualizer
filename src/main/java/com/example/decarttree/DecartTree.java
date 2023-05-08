@@ -125,8 +125,8 @@ public class DecartTree {
         if (!actions.isEmpty()) {
             Action lastAction = actions.remove(actions.size() - 1);
             switch (lastAction.getActionType()) {
-                case INSERT -> root = delete(root, lastAction.getKey(), lastAction.getValue());
-                case DELETE -> root = insert(root, lastAction.getKey(), lastAction.getValue());
+                case INSERT -> root = delete(root, lastAction.getKey(), lastAction.getPriority());
+                case DELETE -> root = insert(root, lastAction.getKey(), lastAction.getPriority());
                 case DELETE_ALL -> actions.clear();
             }
             undoneActions.add(lastAction); // добавляем отмененное действие в список отмененных действий
@@ -137,8 +137,8 @@ public class DecartTree {
         if (!undoneActions.isEmpty()) {
             Action lastUndoneAction = undoneActions.remove(undoneActions.size() - 1);
             switch (lastUndoneAction.getActionType()) {
-                case INSERT -> root = insert(root, lastUndoneAction.getKey(), lastUndoneAction.getValue());
-                case DELETE -> root = delete(root, lastUndoneAction.getKey(), lastUndoneAction.getValue());
+                case INSERT -> root = insert(root, lastUndoneAction.getKey(), lastUndoneAction.getPriority());
+                case DELETE -> root = delete(root, lastUndoneAction.getKey(), lastUndoneAction.getPriority());
                 case DELETE_ALL -> actions.clear();
             }
             actions.add(lastUndoneAction); // добавляем повторенное действие обратно в список действий
