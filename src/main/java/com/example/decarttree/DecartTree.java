@@ -27,13 +27,19 @@ public class DecartTree {
             Node newNode = insert(node.getLeft(), key, priority);
             node.setLeft(newNode);
             if (node.getPriority() < newNode.getPriority()) {
-                node = rotateRight(node);
+                Node right = node.getRight();
+                node.setRight(right.getLeft());
+                right.setLeft(node);
+                node = right;
             }
         } else {
             Node newNode = insert(node.getRight(), key, priority);
             node.setRight(newNode);
             if (node.getPriority() < newNode.getPriority()) {
-                node = rotateLeft(node);
+                Node right = node.getRight();
+                node.setRight(right.getLeft());
+                right.setLeft(node);
+                node = right;
             }
         }
         return node;
@@ -80,20 +86,6 @@ public class DecartTree {
             node = node.getLeft();
         }
         return node;
-    }
-
-    private Node rotateRight(Node node) {
-        Node left = node.getLeft();
-        node.setLeft(left.getRight());
-        left.setRight(node);
-        return left;
-    }
-
-    private Node rotateLeft(Node node) {
-        Node right = node.getRight();
-        node.setRight(right.getLeft());
-        right.setLeft(node);
-        return right;
     }
 
     public Node find(int key, int priority) {
