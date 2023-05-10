@@ -1,6 +1,9 @@
 package com.example.decarttree;
 
+import javafx.scene.paint.Color;
+
 public class Node {
+    public Color color;
     private int key;
     private int priority;
     private Node left;

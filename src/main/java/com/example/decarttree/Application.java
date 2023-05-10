@@ -15,6 +15,7 @@ public class Application extends javafx.application.Application {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("decart-tree-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1495, 800);
         stage.setScene(scene);
+        stage.setMaximized(true);
         stage.show();
     }
 

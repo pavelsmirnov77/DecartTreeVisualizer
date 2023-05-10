@@ -3,7 +3,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
@@ -11,10 +10,10 @@ import javafx.scene.control.ScrollPane;
 
 public class Controller {
     static DecartTree tree = new DecartTree();
-    public Label textMessage;
     public TextField keyTextField;
     public TextField priorityTextField;
     public Spinner counterElements;
+    public TextField messageTextField;
 
     int countInsert = 0;
     @FXML
@@ -47,7 +46,8 @@ public class Controller {
         countInsert = 0;
         tree = new DecartTree();
         if ((int)counterElements.getValue() == 0) {
-            textMessage.setText("Количество элементов для построения должно быть больше 0!");
+            messageTextField.setText("Количество элементов для построения должно быть больше 0!");
+            messageTextField.setStyle("-fx-text-fill: red;");
         } else {
             for (int i = 0; i < (int)counterElements.getValue(); i++) {
                 tree.insert((int)(Math.random() * 10 + 10), (int)(Math.random() * 10 + 10));
@@ -60,19 +60,28 @@ public class Controller {
             scrollPane.setMinWidth(1169);
             scrollPane.setMinHeight(609);
             gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            drawTree(gc, tree.getRoot(), canvas.getWidth() / 2, 40, 25, 15, 120, 0);
-            textMessage.setText(String.format("Построено дерево, состоящее из %d элемента(ов).", (int)counterElements.getValue()));
+            drawTree(gc, tree.getRoot(), canvas.getWidth() / 2, 40, 25, 15, 140, 0);
+            messageTextField.setText(String.format("Построено дерево, состоящее из %d элемента(ов).", (int)counterElements.getValue()));
+            messageTextField.setStyle("-fx-text-fill: green;");
         }
     }
 
     private void drawTree(GraphicsContext gc, Node node, double x, double y, double radius, double angle, double spacing, int depth) {
         if (node != null) {
-            gc.setFill(Color.WHITE);
+            if (node.color == Color.GREEN) {
+                gc.setLineWidth(3);
+                gc.setFill(Color.GREEN);
+                gc.fillOval(x - radius, y - radius, 2 * radius, 2 * radius);
+                gc.strokeOval(x - radius, y - radius, 2 * radius, 2 * radius);
+                gc.setFill(Color.WHITE);
+            } else {
+                gc.setLineWidth(3);
+                gc.setFill(Color.WHITE);
+                gc.fillOval(x - radius, y - radius, 2 * radius, 2 * radius);
+                gc.strokeOval(x - radius, y - radius, 2 * radius, 2 * radius);
+                gc.setFill(Color.BLACK);
+            }
             gc.setStroke(Color.BLACK);
-            gc.setLineWidth(3);
-            gc.fillOval(x - radius, y - radius, 2 * radius, 2 * radius);
-            gc.strokeOval(x - radius, y - radius, 2 * radius, 2 * radius);
-            gc.setFill(Color.BLACK);
             gc.fillText("val: " + node.getKey(), x - 14, y - 2);
             gc.fillText("\npr: " + node.getPriority(), x - 14, y + 2);
 
@@ -82,8 +91,8 @@ public class Controller {
             double childAngle = angle * pow;
 
             if (node.getLeft() != null) {
-                double childX = x - childSpacing - (400 * 1/(depth+1));
-                double childY = 10 + y + spacing + radius - 100/(depth + 1);
+                double childX = x - childSpacing - 400 * 1/(depth+1);
+                double childY = 10 + y + spacing + radius - 50/(depth + 1);
                 gc.strokeLine(x, y + radius, childX, childY - radius);
 
                 // рекурсивный вызов с новым значением угла и глубины
@@ -91,25 +100,26 @@ public class Controller {
             }
             if (node.getRight() != null) {
                 double childX = x + childSpacing + 400 * 1/(depth+1);
-                double childY = 10 + y + spacing + radius - 100/(depth + 1);
+                double childY = 10 + y + spacing + radius - 50/(depth + 1);
                 gc.strokeLine(x, y + radius, childX, childY - radius);
 
                 // рекурсивный вызов с новым значением угла и глубины
                 drawTree(gc, node.getRight(), childX, childY, radius, childAngle, childSpacing, depth + 1);
             }
         }
-        textMessage.setText("Декартово дерево построено.");
     }
 
     public void btnInsert(ActionEvent actionEvent) {
         if (countInsert >= 15 ){
-            textMessage.setText("Вставлено максимальное количество элементов!");
+            messageTextField.setText("Вставлено максимальное количество элементов!");
+            messageTextField.setStyle("-fx-text-fill: red;");
         }
         else {
             String keyText = keyTextField.getText();
             String priorityText = priorityTextField.getText();
             if (keyText.isEmpty() || priorityText.isEmpty()) {
-                textMessage.setText("Поля ключа или значения не могут быть пустыми!");
+                messageTextField.setText("Поля ключа или значения не могут быть пустыми!");
+                messageTextField.setStyle("-fx-text-fill: red;");
             }
             else {
                 int key = Integer.parseInt(keyText);
@@ -119,8 +129,9 @@ public class Controller {
                 scrollPane.setContent(canvas);
                 scrollPane.setMinWidth(1169);
                 scrollPane.setMinHeight(609);
-                drawTree(gc, tree.getRoot(), canvas.getWidth() / 2, 40, 25, 15, 120, 0);
-                textMessage.setText(String.format("Значение с ключом %d и значением %d вставлено успешно.", key, priority));
+                drawTree(gc, tree.getRoot(), canvas.getWidth() / 2, 40, 25, 15, 140, 0);
+                messageTextField.setText(String.format("Значение с ключом %d и приоритетом %d вставлено успешно.", key, priority));
+                messageTextField.setStyle("-fx-text-fill: green;");
                 countInsert++;
             }
         }
@@ -130,16 +141,27 @@ public class Controller {
         String keyText = keyTextField.getText();
         String priorityText = priorityTextField.getText();
         if (keyText.isEmpty() || priorityText.isEmpty()) {
-            textMessage.setText("Поле ключа или значения не может быть пустым!");
+            messageTextField.setText("Поле ключа или значения не может быть пустым!");
+            messageTextField.setStyle("-fx-text-fill: red;");
         }
         else {
             int key = Integer.parseInt(keyText);
             int priority = Integer.parseInt(priorityText);
             Node found = tree.find(key, priority);
             if (found == null) {
-                textMessage.setText(String.format("Элемент с ключом %d и значением %d не найден.", key, priority));
+                messageTextField.setText(String.format("Элемент с ключом %d и приоритетом %d не найден.", key, priority));
+                messageTextField.setStyle("-fx-text-fill: red;");
             } else {
-                textMessage.setText(String.format("Найден элемент с ключом %d и значением %d.", found.getKey(), found.getPriority()));
+                Node node = tree.find(key, priority);
+                node.color = Color.GREEN;
+                GraphicsContext gc = canvas.getGraphicsContext2D();
+                scrollPane.setContent(canvas);
+                scrollPane.setMinWidth(1169);
+                scrollPane.setMinHeight(609);
+                drawTree(gc, tree.getRoot(), canvas.getWidth() / 2, 40, 25, 15, 140, 0);
+                messageTextField.setText(String.format("Найден элемент с ключом %d и приоритетом %d.", found.getKey(), found.getPriority()));
+                messageTextField.setStyle("-fx-text-fill: green;");
+                node.color = Color.BLACK;
             }
         }
     }
@@ -150,34 +172,39 @@ public class Controller {
         String priorityText = priorityTextField.getText();
 
         if (keyText.isEmpty() || priorityText.isEmpty()) {
-            textMessage.setText("Поле ключа или значения не может быть пустым!");
+            messageTextField.setText("Поле ключа или значения не может быть пустым!");
+            messageTextField.setStyle("-fx-text-fill: red;");
         }
         else {
             int key = Integer.parseInt(keyText);
             int priority = Integer.parseInt(priorityText);
             Node found = tree.find(key, priority);
             if (found == null) {
-                textMessage.setText(String.format("Элемент с ключом %d и значением %d для удаления не найден!", key, priority));
+                messageTextField.setText(String.format("Элемент с ключом %d и приоритетом %d для удаления не найден!", key, priority));
+                messageTextField.setStyle("-fx-text-fill: red;");
             }
             else {
                 tree.delete(key, priority);
                 countInsert--;
                 gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                drawTree(gc, tree.getRoot(), canvas.getWidth()/2, 40, 25, 15, 120, 0);
-                textMessage.setText(String.format("Элемент с ключом %d и значением %d удален.", key, priority));
+                drawTree(gc, tree.getRoot(), canvas.getWidth()/2, 40, 25, 15, 140, 0);
+                messageTextField.setText(String.format("Элемент с ключом %d и значением %d удален.", key, priority));
+                messageTextField.setStyle("-fx-text-fill: green;");
             }
         }
     }
 
     public void btnDeleteAll(ActionEvent actionEvent) {
         if (countInsert == 0) {
-            textMessage.setText("Элементы дерева отсутствуют!");
+            messageTextField.setText("Элементы дерева отсутствуют!");
+            messageTextField.setStyle("-fx-text-fill: red;");
         }
         else {
             tree.deleteAll();
             GraphicsContext gc = canvas.getGraphicsContext2D();
             gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            textMessage.setText("Все элементы дерева удалены.");
+            messageTextField.setText("Все элементы дерева удалены.");
+            messageTextField.setStyle("-fx-text-fill: green;");
             countInsert = 0;
         }
     }
@@ -186,15 +213,17 @@ public class Controller {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         tree.undo();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawTree(gc, tree.getRoot(), canvas.getWidth()/2, 40, 25, 15, 120, 0);
-        textMessage.setText("Выполнен шаг назад.");
+        drawTree(gc, tree.getRoot(), canvas.getWidth()/2, 40, 25, 15, 140, 0);
+        messageTextField.setText("Выполнен шаг назад.");
+        messageTextField.setStyle("-fx-text-fill: green;");
     }
 
     public void btnNextStepClicked(ActionEvent actionEvent) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         tree.redo();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawTree(gc, tree.getRoot(), canvas.getWidth()/2, 40, 25, 15, 120, 0);
-        textMessage.setText("Выполнен шаг вперед.");
+        drawTree(gc, tree.getRoot(), canvas.getWidth()/2, 40, 25, 15, 140, 0);
+        messageTextField.setText("Выполнен шаг вперед.");
+        messageTextField.setStyle("-fx-text-fill: green;");
     }
 }
