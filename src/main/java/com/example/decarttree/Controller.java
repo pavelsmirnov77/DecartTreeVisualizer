@@ -8,12 +8,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.control.ScrollPane;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Controller {
     static DecartTree tree = new DecartTree();
     public TextField keyTextField;
     public TextField priorityTextField;
     public Spinner counterElements;
     public TextField messageTextField;
+    public List<Integer> keyList = new ArrayList<>();
 
     int countInsert = 0;
     @FXML
@@ -43,6 +47,8 @@ public class Controller {
     }
 
     public void btnStartClicked(ActionEvent actionEvent) {
+        int key = 0;
+        int priority = 0;
         countInsert = 0;
         tree = new DecartTree();
         if ((int)counterElements.getValue() == 0) {
@@ -50,7 +56,10 @@ public class Controller {
             messageTextField.setStyle("-fx-text-fill: red;");
         } else {
             for (int i = 0; i < (int)counterElements.getValue(); i++) {
-                tree.insert((int)(Math.random() * 10 + 10), (int)(Math.random() * 10 + 10));
+                key = (int)(Math.random() * 1000 + 10);
+                priority = (int)(Math.random() * 10 + 10);
+                tree.insert(key, priority);
+                keyList.add(key);
             }
 
             countInsert += (int)counterElements.getValue();
@@ -82,8 +91,8 @@ public class Controller {
                 gc.setFill(Color.BLACK);
             }
             gc.setStroke(Color.BLACK);
-            gc.fillText("val: " + node.getKey(), x - 14, y - 2);
-            gc.fillText("\npr: " + node.getPriority(), x - 14, y + 2);
+            gc.fillText("k: " + node.getKey(), x - 14, y - 2);
+            gc.fillText("\np: " + node.getPriority(), x - 14, y + 2);
 
             // увеличение расстояния между узлами и угла линии в зависимости от глубины дерева
             double pow = Math.pow(2, -Math.floor(depth / 4) - 1);
@@ -124,15 +133,22 @@ public class Controller {
             else {
                 int key = Integer.parseInt(keyText);
                 int priority = Integer.parseInt(priorityText);
-                tree.insert(key, priority);
-                GraphicsContext gc = canvas.getGraphicsContext2D();
-                scrollPane.setContent(canvas);
-                scrollPane.setMinWidth(1169);
-                scrollPane.setMinHeight(609);
-                drawTree(gc, tree.getRoot(), canvas.getWidth() / 2, 40, 25, 15, 140, 0);
-                messageTextField.setText(String.format("Значение с ключом %d и приоритетом %d вставлено успешно.", key, priority));
-                messageTextField.setStyle("-fx-text-fill: green;");
-                countInsert++;
+                if (keyList.contains(key)) {
+                    messageTextField.setText("Данный элемент нельзя вставить в дерево, так как элемент с таким ключом уже имеется!");
+                    messageTextField.setStyle("-fx-text-fill: red;");
+                }
+                else {
+                    tree.insert(key, priority);
+                    keyList.add(key);
+                    GraphicsContext gc = canvas.getGraphicsContext2D();
+                    scrollPane.setContent(canvas);
+                    scrollPane.setMinWidth(1169);
+                    scrollPane.setMinHeight(609);
+                    drawTree(gc, tree.getRoot(), canvas.getWidth() / 2, 40, 25, 15, 140, 0);
+                    messageTextField.setText(String.format("Значение с ключом %d и приоритетом %d вставлено успешно.", key, priority));
+                    messageTextField.setStyle("-fx-text-fill: green;");
+                    countInsert++;
+                }
             }
         }
     }
@@ -178,6 +194,7 @@ public class Controller {
         else {
             int key = Integer.parseInt(keyText);
             int priority = Integer.parseInt(priorityText);
+            keyList.remove(Integer.valueOf(key));
             Node found = tree.find(key, priority);
             if (found == null) {
                 messageTextField.setText(String.format("Элемент с ключом %d и приоритетом %d для удаления не найден!", key, priority));
@@ -201,6 +218,7 @@ public class Controller {
         }
         else {
             tree.deleteAll();
+            keyList.clear();
             GraphicsContext gc = canvas.getGraphicsContext2D();
             gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
             messageTextField.setText("Все элементы дерева удалены.");

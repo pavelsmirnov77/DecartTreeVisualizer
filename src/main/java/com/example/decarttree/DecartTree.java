@@ -27,10 +27,10 @@ public class DecartTree {
             Node newNode = insert(node.getLeft(), key, priority);
             node.setLeft(newNode);
             if (node.getPriority() < newNode.getPriority()) {
-                Node right = node.getRight();
-                node.setRight(right.getLeft());
-                right.setLeft(node);
-                node = right;
+                Node left = node.getLeft();
+                node.setLeft(left.getRight());
+                left.setRight(node);
+                node = left;
             }
         } else {
             Node newNode = insert(node.getRight(), key, priority);
