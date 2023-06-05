@@ -1,5 +1,4 @@
 package com.example.decarttree;
-import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -89,6 +88,12 @@ public class Controller {
                 gc.fillOval(x - radius, y - radius, 2 * radius, 2 * radius);
                 gc.strokeOval(x - radius, y - radius, 2 * radius, 2 * radius);
                 gc.setFill(Color.WHITE);
+            } else if (node.color == Color.YELLOW) {
+                gc.setLineWidth(3);
+                gc.setFill(Color.YELLOW);
+                gc.fillOval(x - radius, y - radius, 2 * radius, 2 * radius);
+                gc.strokeOval(x - radius, y - radius, 2 * radius, 2 * radius);
+                gc.setFill(Color.BLACK);
             } else {
                 gc.setLineWidth(3);
                 gc.setFill(Color.WHITE);
@@ -106,16 +111,16 @@ public class Controller {
             double childAngle = angle * pow;
 
             if (node.getLeft() != null) {
-                double childX = x - childSpacing - 400 * 1/(depth+1);
-                double childY = 10 + y + spacing + radius - 50/(depth + 1);
+                double childX = x - childSpacing - 400 * 1 / (depth + 1);
+                double childY = 10 + y + spacing + radius - 50 / (depth + 1);
                 gc.strokeLine(x, y + radius, childX, childY - radius);
 
                 // рекурсивный вызов с новым значением угла и глубины
                 drawTree(gc, node.getLeft(), childX, childY, radius, childAngle, childSpacing, depth + 1);
             }
             if (node.getRight() != null) {
-                double childX = x + childSpacing + 400 * 1/(depth+1);
-                double childY = 10 + y + spacing + radius - 50/(depth + 1);
+                double childX = x + childSpacing + 400 * 1 / (depth + 1);
+                double childY = 10 + y + spacing + radius - 50 / (depth + 1);
                 gc.strokeLine(x, y + radius, childX, childY - radius);
 
                 // рекурсивный вызов с новым значением угла и глубины
@@ -151,6 +156,7 @@ public class Controller {
                     scrollPane.setMinWidth(1169);
                     scrollPane.setMinHeight(609);
                     drawTree(gc, tree.getRoot(), canvas.getWidth() / 2, 40, 25, 15, 140, 0);
+                    animateInsertedElement(key, priority);
                     messageTextField.setText(String.format("Значение с ключом %d и приоритетом %d вставлено успешно.", key, priority));
                     messageTextField.setStyle("-fx-text-fill: green;");
                     countInsert++;
@@ -158,6 +164,40 @@ public class Controller {
             }
         }
     }
+    private void animateInsertedElement(int key, int priority) {
+        Node insertedNode = tree.find(key, priority);
+        if (insertedNode != null) {
+            GraphicsContext gc = canvas.getGraphicsContext2D();
+
+            // Animation properties
+            final int numFlashes = 4;
+            final Duration flashDuration = Duration.seconds(2);
+            final Duration frameDuration = flashDuration.divide(numFlashes * 2);
+            final Color originalColor = Color.YELLOW;
+            final Color flashColor = Color.TRANSPARENT;
+
+            KeyFrame[] flashKeyFrames = new KeyFrame[numFlashes * 2];
+            for (int i = 0; i < numFlashes * 2; i++) {
+                final boolean isFlashOn = i % 2 == 0;
+                Duration keyFrameTime = frameDuration.multiply(i);
+                KeyFrame keyFrame = new KeyFrame(keyFrameTime, event -> {
+                    insertedNode.color = isFlashOn ? flashColor : originalColor;
+                    drawTree(gc, tree.getRoot(), canvas.getWidth() / 2, 40, 25, 15, 140, 0);
+                });
+                flashKeyFrames[i] = keyFrame;
+            }
+
+            Timeline timeline = new Timeline();
+            timeline.getKeyFrames().addAll(flashKeyFrames);
+            timeline.play();
+
+            timeline.setOnFinished(event -> {
+                insertedNode.color = Color.WHITE;
+                drawTree(gc, tree.getRoot(), canvas.getWidth() / 2, 40, 25, 15, 140, 0);
+            });
+        }
+    }
+
     public void findBtn(ActionEvent actionEvent) {
         String keyText = keyTextField.getText();
         String priorityText = priorityTextField.getText();
@@ -271,6 +311,7 @@ public class Controller {
             scrollPane.setMinHeight(609);
             gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
             drawTree(gc, tree.getRoot(), canvas.getWidth() / 2, 40, 25, 15, 140, 0);
+            animateInsertedElement(key, priority);
             messageTextField.setText(String.format("Значение с ключом %d и приоритетом %d вставлено успешно.", key, priority));
             messageTextField.setStyle("-fx-text-fill: green;");
         });
