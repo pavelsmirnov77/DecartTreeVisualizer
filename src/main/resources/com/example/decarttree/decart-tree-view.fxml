@@ -54,5 +54,15 @@
             <Font name="System Bold" size="16.0" />
          </font>
       </TextField>
+      <Button fx:id="autoBuildBtn" layoutX="1305.0" layoutY="707.0" mnemonicParsing="false" onAction="#autoBuildTree" text="Автопостроение" />
+      <Spinner fx:id="counterElemAuto" editable="true" layoutX="1401.0" layoutY="663.0" max="15" min="0" prefHeight="26.0" prefWidth="53.0" />
+      <Label layoutX="1265.0" layoutY="667.0" text="Количество элементов" />
+      <Spinner fx:id="timer" editable="true" layoutX="1401.0" layoutY="623.0" max="5" min="0" prefHeight="26.0" prefWidth="54.0" />
+      <Label layoutX="1298.0" layoutY="626.0" text="Время задержки" />
+      <Label layoutX="1253.0" layoutY="590.0" prefHeight="18.0" prefWidth="215.0" text="Автоматическое построение дерева">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

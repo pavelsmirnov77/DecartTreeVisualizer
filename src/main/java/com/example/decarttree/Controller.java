@@ -1,4 +1,7 @@
 package com.example.decarttree;
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -7,6 +10,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.control.ScrollPane;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +22,8 @@ public class Controller {
     public Spinner counterElements;
     public TextField messageTextField;
     public List<Integer> keyList = new ArrayList<>();
+    public Spinner counterElemAuto;
+    public Spinner timer;
 
     int countInsert = 0;
     @FXML
@@ -152,7 +158,6 @@ public class Controller {
             }
         }
     }
-
     public void findBtn(ActionEvent actionEvent) {
         String keyText = keyTextField.getText();
         String priorityText = priorityTextField.getText();
@@ -243,5 +248,34 @@ public class Controller {
         drawTree(gc, tree.getRoot(), canvas.getWidth()/2, 40, 25, 15, 140, 0);
         messageTextField.setText("Выполнен шаг вперед.");
         messageTextField.setStyle("-fx-text-fill: green;");
+    }
+
+    public void autoBuildTree(ActionEvent actionEvent) {
+        int numElements = (int) counterElemAuto.getValue();
+
+        Timeline timeline = new Timeline();
+        timeline.setCycleCount(numElements);
+        tree.deleteAll();
+        keyList.clear();
+        countInsert = 0;
+        KeyFrame keyFrame = new KeyFrame(Duration.seconds((int)timer.getValue()), event -> {
+            int key = (int)(Math.random() * 1000 + 10);
+            int priority = (int)(Math.random() * 10 + 10);
+            tree.insert(key, priority);
+            keyList.add(key);
+            countInsert++;
+
+            GraphicsContext gc = canvas.getGraphicsContext2D();
+            scrollPane.setContent(canvas);
+            scrollPane.setMinWidth(1169);
+            scrollPane.setMinHeight(609);
+            gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawTree(gc, tree.getRoot(), canvas.getWidth() / 2, 40, 25, 15, 140, 0);
+            messageTextField.setText(String.format("Значение с ключом %d и приоритетом %d вставлено успешно.", key, priority));
+            messageTextField.setStyle("-fx-text-fill: green;");
+        });
+
+        timeline.getKeyFrames().add(keyFrame);
+        timeline.play();
     }
 }
